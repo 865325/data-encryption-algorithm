@@ -1,10 +1,4 @@
-#include <iostream>
-#include <stdlib.h>
-#include <bitset>
-#include <string.h>
-#include <iomanip>
-
-using namespace std;
+#include "des.h"
 
 #define ENCRYPTION_ITERATION 16							  // DES算法迭代加密轮次
 #define TEXT_LEN 64										  // 一次加密的数据长度
@@ -12,13 +6,6 @@ using namespace std;
 #define TEMP_SECRET_KEY_LEN 56							  // 生成子密钥过程中的中间密钥长度
 #define SUB_SECRET_KEY_LEN 48							  // 子密钥的长度
 #define array_len(array) sizeof(array) / sizeof(array[0]) // 获取数组的长度
-
-// 调用des方法，加密或者解密
-enum des_method
-{
-	des_encode,
-	des_decode
-};
 
 // 每轮迭代中，向左循环移动的位数
 static const unsigned int bit_circulation[ENCRYPTION_ITERATION] = {
@@ -370,21 +357,4 @@ void data_encryption_standard(const char *secret_key_str, const size_t secret_ke
 
 	// 6. 将密文由位图形式转为字符串
 	bitset_to_str(cipher_text, cipher_text_str, cipher_text_str_len);
-}
-
-int main()
-{
-	char secret_key_str[] = "122abcd";
-	char plain_text[] = "12345678";
-	char cipher_text[sizeof(plain_text)];
-
-	des_method method = des_encode;
-	data_encryption_standard(secret_key_str, sizeof(secret_key_str), plain_text, sizeof(plain_text), cipher_text,
-							 sizeof(cipher_text), method);
-
-	method = des_decode;
-	char text[sizeof(plain_text)];
-	data_encryption_standard(secret_key_str, sizeof(secret_key_str), cipher_text, sizeof(cipher_text), text,
-							 sizeof(text), method);
-	cout << text << endl;
 }
