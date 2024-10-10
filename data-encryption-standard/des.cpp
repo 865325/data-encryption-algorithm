@@ -66,7 +66,7 @@ static const unsigned char extend_table[SUB_SECRET_KEY_LEN] = {
 
 // S盒置换表，共有8个子盒子，每个子盒子都将6位输入压缩为4位
 // 由于是由6位压缩为4位，则每个子盒子有 2^6 个元素，里面元素的最大值为 2^4-1
-const static unsigned char sbox_table[8][64] = {
+static const unsigned char sbox_table[8][64] = {
 	{// S1盒子
 	 14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7,
 	 0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11, 9, 5, 3, 8,
@@ -109,7 +109,7 @@ const static unsigned char sbox_table[8][64] = {
 	 2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11}};
 
 // P盒置换表
-const static unsigned char pbox_table[TEXT_LEN / 2] = {
+static const unsigned char pbox_table[TEXT_LEN / 2] = {
 	16, 7, 20, 21, 29, 12, 28, 17, 1, 15, 23, 26, 5, 18, 31, 10,
 	2, 8, 24, 14, 32, 27, 3, 9, 19, 13, 30, 6, 22, 11, 4, 25};
 
@@ -212,7 +212,7 @@ static bitset<SUB_SECRET_KEY_LEN> generate_sub_secret_key(const size_t &current_
  */
 static void str_to_bitset(bitset<SECRET_KEY_LEN> &bitset_data, const char *str_data, const ssize_t str_data_len)
 {
-	for (int i = 0; i < bitset_data.size(); i++)
+	for (size_t i = 0; i < bitset_data.size(); i++)
 	{
 		if (i < str_data_len * 8)
 		{
@@ -382,4 +382,9 @@ int main()
 	data_encryption_standard(secret_key_str, sizeof(secret_key_str), plain_text, sizeof(plain_text), cipher_text,
 							 sizeof(cipher_text), method);
 
+	method = des_decode;
+	char text[sizeof(plain_text)];
+	data_encryption_standard(secret_key_str, sizeof(secret_key_str), cipher_text, sizeof(cipher_text), text,
+							 sizeof(text), method);
+	cout << text << endl;
 }
